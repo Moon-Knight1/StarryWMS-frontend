@@ -376,18 +376,19 @@ $tags-bar-height: 34px;
 .tags-view-container {
   height: $tags-bar-height;
   width: 100%;
-  background: var(--tags-bg, #fff);
-  border-bottom: 1px solid var(--tags-item-border, #d8dce5);
+  background: var(--tags-bg, rgba(8, 14, 26, 0.92));
+  border-bottom: 1px solid var(--tags-item-border, rgba(200, 149, 108, 0.1));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
   display: flex;
   align-items: center;
   overflow: hidden;
 
   $btn-width: 28px;
-  $btn-color: #71717a;
-  $btn-hover-bg: #f0f2f5;
-  $btn-hover-color: #303133;
-  $btn-disabled-color: #c0c4cc;
-  $divider: 1px solid var(--tags-item-border, #d8dce5);
+  $btn-color: rgba(180, 198, 217, 0.62);
+  $btn-hover-bg: rgba(200, 149, 108, 0.08);
+  $btn-hover-color: #dce4ec;
+  $btn-disabled-color: rgba(180, 198, 217, 0.24);
+  $divider: 1px solid var(--tags-item-border, rgba(200, 149, 108, 0.1));
 
   .tags-nav-btn {
     flex-shrink: 0;
@@ -428,9 +429,9 @@ $tags-bar-height: 34px;
       cursor: pointer;
       height: 26px;
       line-height: 26px;
-      border: 1px solid var(--tags-item-border, #d8dce5);
-      color: var(--tags-item-text, #495060);
-      background: var(--tags-item-bg, #fff);
+      border: 1px solid var(--tags-item-border, rgba(200, 149, 108, 0.1));
+      color: var(--tags-item-text, rgba(180, 198, 217, 0.68));
+      background: var(--tags-item-bg, rgba(10, 14, 20, 0.38));
       padding: 0 8px;
       font-size: 12px;
       margin-left: 5px;
@@ -445,19 +446,20 @@ $tags-bar-height: 34px;
   }
 
   &:not(.tags-view-container--chrome) .tags-view-wrapper .tags-view-item.active {
-    background-color: #42b983;
-    color: #fff;
-    border-color: #42b983;
+    background-color: var(--tags-card-active-bg, rgba(200, 149, 108, 0.14));
+    color: var(--star-amber, #c8956c);
+    border-color: var(--tags-card-active-border, rgba(200, 149, 108, 0.24));
 
     &::before {
       content: '';
-      background: #fff;
+      background: var(--star-amber, #c8956c);
       display: inline-block;
       width: 8px;
       height: 8px;
       border-radius: 50%;
       position: relative;
       margin-right: 5px;
+      box-shadow: 0 0 8px rgba(200, 149, 108, 0.35);
     }
   }
 
@@ -496,7 +498,7 @@ $tags-bar-height: 34px;
 
   .contextmenu {
     margin: 0;
-    background: var(--el-bg-color-overlay, #fff);
+    background: var(--el-bg-color-overlay, #141c26);
     z-index: 3000;
     position: fixed;
     list-style-type: none;
@@ -504,9 +506,9 @@ $tags-bar-height: 34px;
     border-radius: 4px;
     font-size: 12px;
     font-weight: 400;
-    color: var(--tags-item-text, #333);
-    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, .3);
-    border: 1px solid var(--el-border-color-light, #e4e7ed);
+    color: var(--tags-item-text, rgba(180, 198, 217, 0.82));
+    box-shadow: 0 14px 34px rgba(0, 0, 0, .38);
+    border: 1px solid var(--el-border-color-light, rgba(200, 149, 108, 0.12));
 
     li {
       margin: 0;
@@ -514,17 +516,17 @@ $tags-bar-height: 34px;
       cursor: pointer;
 
       &:hover {
-        background: var(--tags-item-hover, #eee);
+        background: var(--tags-item-hover, rgba(200, 149, 108, 0.08));
       }
     }
   }
 
   &.tags-view-container--chrome {
-    --chrome-strip-bg: #ffffff;
-    --chrome-strip-border: var(--el-border-color-lighter, #e4e7ed);
-    --chrome-tab-active-bg: var(--el-color-primary-light-9);
-    --chrome-tab-text: var(--el-text-color-regular, #606266);
-    --chrome-tab-text-active: var(--el-color-primary);
+    --chrome-strip-bg: var(--tags-bg, rgba(8, 14, 26, 0.92));
+    --chrome-strip-border: var(--tags-item-border, rgba(200, 149, 108, 0.1));
+    --chrome-tab-active-bg: rgba(20, 28, 38, 0.96);
+    --chrome-tab-text: var(--tags-item-text, rgba(180, 198, 217, 0.68));
+    --chrome-tab-text-active: var(--star-amber, #c8956c);
     --chrome-wing-r: 10px;
 
     overflow: visible;
@@ -601,14 +603,14 @@ $tags-bar-height: 34px;
         }
 
         &:not(.active) + .tags-view-item:not(.active) {
-          border-left: 1px solid var(--el-border-color-lighter, #e4e7ed);
+          border-left: 1px solid var(--chrome-strip-border);
           padding-left: 11px;
         }
 
         &:hover:not(.active) {
-          background: var(--el-fill-color-light, #f5f7fa) !important;
+          background: rgba(200, 149, 108, 0.08) !important;
           border-radius: 6px 6px 0 0;
-          color: var(--el-text-color-primary, #303133);
+          color: var(--el-text-color-primary, #dce4ec);
         }
 
         &.active {
@@ -620,7 +622,7 @@ $tags-bar-height: 34px;
           background: var(--chrome-tab-active-bg) !important;
           border: none !important;
           border-radius: var(--chrome-wing-r) var(--chrome-wing-r) 0 0;
-          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+          box-shadow: inset 0 1px 0 rgba(200, 149, 108, 0.12);
 
           &::before {
             box-shadow: calc(var(--chrome-wing-r) * 0.5) calc(var(--chrome-wing-r) * 0.5) 0 calc(var(--chrome-wing-r) * 0.5) var(--chrome-tab-active-bg);

@@ -25,5 +25,8 @@ export * from "./monitor/logininfor";
 export * from "./monitor/operlog";
 export * from "./monitor/online";
 
+// 主档管理
+export * from "./wms/owners";
+
 // 代码生成模块
 export * from "./tool/gen";

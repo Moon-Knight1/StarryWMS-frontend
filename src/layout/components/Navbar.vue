@@ -25,7 +25,7 @@
         <el-tooltip content="主题模式" effect="dark" placement="bottom">
           <div class="right-menu-item hover-effect theme-switch-wrapper" @click="toggleTheme">
             <svg-icon v-if="settingsStore.isDark" icon-class="sunny" />
-            <svg-icon v-if="!settingsStore.isDark" icon-class="moon" />
+            <svg-icon v-else icon-class="moon" />
           </div>
         </el-tooltip>
 
@@ -40,21 +40,30 @@
 
       <el-dropdown @command="handleCommand" class="avatar-container right-menu-item hover-effect" trigger="hover">
         <div class="avatar-wrapper">
-          <img :src="userStore.avatar" class="user-avatar" />
-          <span class="user-nickname"> {{ userStore.nickName }} </span>
+          <span class="avatar-ring">
+            <img :src="userStore.avatar" class="user-avatar" />
+          </span>
+          <span class="user-nickname">{{ userStore.nickName }}</span>
+          <span class="avatar-arrow">▾</span>
         </div>
         <template #dropdown>
-          <el-dropdown-menu>
+          <el-dropdown-menu class="star-dropdown">
             <router-link to="/user/profile">
-              <el-dropdown-item>个人中心</el-dropdown-item>
+              <el-dropdown-item>
+                <span class="dropdown-dot"></span>
+                <span>个人中心</span>
+              </el-dropdown-item>
             </router-link>
             <el-dropdown-item command="setLayout" v-if="settingsStore.showSettings">
-                <span>布局设置</span>
+              <span class="dropdown-dot"></span>
+              <span>布局设置</span>
             </el-dropdown-item>
             <el-dropdown-item command="lockScreen">
-                <span>锁定屏幕</span>
+              <span class="dropdown-dot"></span>
+              <span>锁定屏幕</span>
             </el-dropdown-item>
             <el-dropdown-item divided command="logout">
+              <span class="dropdown-dot danger"></span>
               <span>退出登录</span>
             </el-dropdown-item>
           </el-dropdown-menu>
@@ -81,6 +90,11 @@ import useUserStore from '@/store/modules/user'
 import useLockStore from '@/store/modules/lock'
 import useSettingsStore from '@/store/modules/settings'
 import HeaderNotice from './HeaderNotice'
+
+type ViewTransition = {
+  ready: Promise<void>
+  finished: Promise<void>
+}
 
 const route = useRoute()
 const router = useRouter()
@@ -126,7 +140,7 @@ function setLayout(): void {
   emits('setLayout')
 }
 
-function lockScreen() {
+function lockScreen(): void {
   const currentPath = route.fullPath
   lockStore.lockScreen(currentPath)
   router.push('/lock')
@@ -136,17 +150,18 @@ async function toggleTheme(event?: MouseEvent): Promise<void> {
   const x = event?.clientX || window.innerWidth / 2
   const y = event?.clientY || window.innerHeight / 2
   const wasDark = settingsStore.isDark
-
+  const startViewTransition = (document as Document & {
+    startViewTransition?: (callback: () => void | Promise<void>) => ViewTransition
+  }).startViewTransition
   const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  const isSupported = typeof (document as any).startViewTransition === 'function' && !isReducedMotion
 
-  if (!isSupported) {
+  if (!startViewTransition || isReducedMotion) {
     settingsStore.toggleTheme()
     return
   }
 
   try {
-    const transition = document.startViewTransition(async () => {
+    const transition = startViewTransition(async () => {
       await new Promise((resolve) => setTimeout(resolve, 10))
       settingsStore.toggleTheme()
       await nextTick()
@@ -174,6 +189,13 @@ async function toggleTheme(event?: MouseEvent): Promise<void> {
 </script>
 
 <style lang='scss' scoped>
+$nav-bg: rgba(17, 28, 21, 0.94);
+$nav-border: rgba(200, 149, 108, 0.1);
+$nav-text: #b8ae98;
+$nav-text-hover: #e8dfd0;
+$nav-hover-bg: rgba(200, 149, 108, 0.08);
+$nav-amber: #c8956c;
+
 .navbar.nav3 {
   .hamburger-container {
     display: none !important;
@@ -181,29 +203,33 @@ async function toggleTheme(event?: MouseEvent): Promise<void> {
 }
 
 .navbar {
-  height: 50px;
+  height: 52px;
   overflow: hidden;
   position: relative;
-  background: var(--navbar-bg);
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  background: $nav-bg;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid $nav-border;
+  box-shadow: 0 1px 0 rgba(200, 149, 108, 0.05), 0 6px 24px rgba(0, 0, 0, 0.18);
   display: flex;
   align-items: center;
-  // padding: 0 8px;
   box-sizing: border-box;
 
   .hamburger-container {
-    line-height: 46px;
     height: 100%;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background 0.2s, color 0.2s;
     -webkit-tap-highlight-color: transparent;
     display: flex;
     align-items: center;
     flex-shrink: 0;
-    margin-right: 8px;
+    margin-right: 4px;
+    padding: 0 12px;
+    color: $nav-text;
 
     &:hover {
-      background: rgba(0, 0, 0, 0.025);
+      background: $nav-hover-bg;
+      color: $nav-amber;
     }
   }
 
@@ -227,7 +253,7 @@ async function toggleTheme(event?: MouseEvent): Promise<void> {
 
   .right-menu {
     height: 100%;
-    line-height: 50px;
+    line-height: 52px;
     display: flex;
     align-items: center;
     margin-left: auto;
@@ -237,69 +263,162 @@ async function toggleTheme(event?: MouseEvent): Promise<void> {
     }
 
     .right-menu-item {
-      display: inline-block;
-      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px;
       height: 100%;
-      font-size: 18px;
-      color: #5a5e66;
+      font-size: 16px;
+      color: $nav-text;
       vertical-align: text-bottom;
+      transition: color 0.2s, background 0.2s;
 
       &.hover-effect {
         cursor: pointer;
-        transition: background 0.3s;
+        position: relative;
 
         &:hover {
-          background: rgba(0, 0, 0, 0.025);
+          color: $nav-text-hover;
+          background: $nav-hover-bg;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          width: 0;
+          height: 1px;
+          background: $nav-amber;
+          opacity: 0.6;
+          transition: width 0.22s, left 0.22s;
+        }
+
+        &:hover::after {
+          width: 58%;
+          left: 21%;
         }
       }
 
-      &.theme-switch-wrapper {
-        display: flex;
-        align-items: center;
+      &.theme-switch-wrapper svg {
+        transition: transform 0.2s, color 0.2s;
+      }
 
-        svg {
-          transition: transform 0.3s;
-          
-          &:hover {
-            transform: scale(1.15);
-          }
-        }
+      &.theme-switch-wrapper:hover svg {
+        transform: scale(1.12);
+        color: $nav-amber;
       }
     }
 
     .avatar-container {
-      margin-right: 0px;
-      padding-right: 0px;
+      margin-right: 0;
+      padding: 0 16px 0 8px;
 
       .avatar-wrapper {
-        margin-top: 10px;
-        right: 8px;
-        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        cursor: pointer;
+      }
 
-        .user-avatar {
-          cursor: pointer;
-          width: 30px;
-          height: 30px;
-          margin-right: 8px;
-          border-radius: 50%;
+      .avatar-ring {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        padding: 1.5px;
+        background: conic-gradient(from 0deg, $nav-amber, #8fb89a, $nav-amber);
+        flex-shrink: 0;
+        transition: box-shadow 0.2s;
+      }
+
+      .user-avatar {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+        border: 1.5px solid rgba(8, 14, 26, 0.88);
+      }
+
+      .user-nickname {
+        max-width: 110px;
+        overflow: hidden;
+        color: $nav-text;
+        font-size: 13px;
+        font-weight: 500;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .avatar-arrow {
+        color: rgba(180, 198, 217, 0.48);
+        font-size: 11px;
+      }
+
+      &:hover {
+        .avatar-ring {
+          box-shadow: 0 0 14px rgba(200, 149, 108, 0.22);
         }
 
-        .user-nickname{
-          position: relative;
-          left: 0px;
-          bottom: 10px;
-          font-size: 14px;
-          font-weight: bold;
-        }
-
-        i {
-          cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
+        .user-nickname,
+        .avatar-arrow {
+          color: $nav-text-hover;
         }
       }
+    }
+  }
+}
+
+:deep(.star-dropdown) {
+  min-width: 148px;
+  padding: 6px 0 !important;
+  border-radius: 6px !important;
+
+  .el-dropdown-menu__item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #b4c6d9 !important;
+    font-size: 13px;
+    padding: 9px 16px !important;
+    transition: background 0.2s, color 0.2s;
+
+    .dropdown-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(200, 149, 108, 0.55);
+      flex: 0 0 auto;
+
+      &.danger {
+        background: rgba(245, 108, 108, 0.72);
+      }
+    }
+
+    &:hover {
+      color: #dce4ec !important;
+      background: rgba(200, 149, 108, 0.08) !important;
+
+      .dropdown-dot {
+        background: #c8956c;
+      }
+    }
+  }
+
+  .el-dropdown-menu__item--divided {
+    border-top-color: rgba(200, 149, 108, 0.1) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    .right-menu .right-menu-item {
+      padding: 0 7px;
+      font-size: 14px;
+    }
+
+    .avatar-container .avatar-wrapper .user-nickname {
+      display: none;
     }
   }
 }

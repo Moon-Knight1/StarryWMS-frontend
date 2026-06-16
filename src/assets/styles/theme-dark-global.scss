@@ -1,0 +1,84 @@
+html.dark {
+  color-scheme: dark;
+
+  .app-main {
+    background: #111c15;
+  }
+
+  .app-container {
+    background:
+      radial-gradient(circle at 12% 8%, rgba(200, 149, 108, 0.05), transparent 28%),
+      radial-gradient(circle at 84% 4%, rgba(143, 184, 154, 0.05), transparent 24%),
+      #111c15;
+  }
+
+  .el-card,
+  .el-dialog,
+  .el-drawer,
+  .el-message-box {
+    background: #17231b !important;
+    border-color: rgba(200, 149, 108, 0.1) !important;
+    color: var(--star-mist);
+  }
+
+  .el-card {
+    box-shadow: none;
+  }
+
+  .el-card__header,
+  .el-dialog__header,
+  .el-drawer__header {
+    border-color: var(--star-border) !important;
+  }
+
+  .el-input__wrapper,
+  .el-textarea__inner,
+  .el-select__wrapper {
+    background: rgba(10, 14, 20, 0.76) !important;
+    border: 1px solid rgba(200, 149, 108, 0.12);
+    box-shadow: none !important;
+  }
+
+  .el-input__wrapper.is-focus,
+  .el-select__wrapper.is-focused {
+    border-color: rgba(200, 149, 108, 0.5);
+    box-shadow: 0 0 0 1px rgba(200, 149, 108, 0.18) !important;
+  }
+
+  .el-button {
+    border-radius: 4px;
+  }
+
+  .el-button--primary {
+    --el-button-bg-color: var(--star-amber);
+    --el-button-border-color: var(--star-amber);
+    --el-button-hover-bg-color: #d4a57a;
+    --el-button-hover-border-color: #d4a57a;
+    --el-button-active-bg-color: #b78157;
+    --el-button-active-border-color: #b78157;
+    color: #0c1018;
+    font-weight: 600;
+  }
+
+  .el-dropdown-menu {
+    background: rgba(8, 14, 26, 0.96) !important;
+    border-color: rgba(200, 149, 108, 0.12) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.42) !important;
+  }
+
+  .el-popper.is-light,
+  .el-popper.is-dark {
+    background: rgba(8, 14, 26, 0.96);
+    border-color: rgba(200, 149, 108, 0.12);
+  }
+
+  .el-table {
+    background: transparent;
+
+    tr,
+    th.el-table__cell,
+    td.el-table__cell {
+      background: transparent;
+    }
+  }
+}

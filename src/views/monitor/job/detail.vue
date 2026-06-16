@@ -222,4 +222,19 @@ const costTime = computed<number>(() => {
 .detail-label {
   width: 80px;
 }
+
+:deep(.detail-card-title) {
+  font-family: 'Libre Baskerville', 'Noto Serif SC', Georgia, serif !important;
+  font-style: italic;
+  letter-spacing: 0.03em;
+}
+
+:deep(.detail-card) {
+  font-family: 'DM Sans', 'Noto Sans SC', -apple-system, sans-serif;
+}
+
+:deep(.detail-value) {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 13px;
+}
 </style>

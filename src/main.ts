@@ -8,6 +8,7 @@ import 'element-plus/theme-chalk/dark/css-vars.css'
 import locale from 'element-plus/es/locale/lang/zh-cn'
 
 import '@/assets/styles/index.scss' // global css
+import '@/assets/styles/theme-dark-global.scss' // StarryWMS dark shell
 
 import App from './App.vue'
 import store from './store'
