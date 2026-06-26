@@ -1,11 +1,17 @@
 import type { PageDomain, BaseEntity } from "../common";
 
 /** 货主配置分页查询参数 */
-export interface OwnersQueryParams extends PageDomain {
+export interface ConsgnorQueryParams extends PageDomain {
+  /** 创建时间 */
+  createTime?: string;
+  /** 货主编码 (唯一标识，如 C00001) */
+  ownerCode?: string;
   /** 货主名称 (公司全称) */
   ownerName?: string;
-  /** 联系人 */
-  contactPerson?: string;
+  /** 国家 */
+  country?: string;
+  /** 城市 */
+  city?: string;
   /** 结算币种 */
   settlementCurrency?: string;
   /** 状态 */
@@ -14,7 +20,7 @@ export interface OwnersQueryParams extends PageDomain {
 
 /** 货主配置信息 */
 export interface WmsCargoOwners extends BaseEntity {
-  /** 主键ID */
+  /** 主键ID (Snowflake Long, JS Number 精度不够，序列化为 String) */
   id?: string;
   /** 创建人 */
   createBy?: string;

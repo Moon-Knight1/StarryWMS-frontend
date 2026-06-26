@@ -26,7 +26,13 @@ export * from "./monitor/operlog";
 export * from "./monitor/online";
 
 // 主档管理
-export * from "./wms/owners";
+export * from "./master/consgnor";
+
+// 储位管理
+export * from "./location/warehouses";
+export * from "./location/zones";
+export * from "./location/storage_location";
+
 
 // 代码生成模块
 export * from "./tool/gen";

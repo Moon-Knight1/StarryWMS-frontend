@@ -5,12 +5,40 @@
       <el-row :gutter="20" class="mb8">
         <el-col :span="12">
           <div class="info-item">
+            <label class="info-label">创建时间：</label>
+            <span class="info-value plaintext">
+              {{ parseTime(info.createTime, '{y}-{m}-{d}') }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="info-item">
+            <label class="info-label">更新时间：</label>
+            <span class="info-value plaintext">
+              {{ parseTime(info.updateTime, '{y}-{m}-{d}') }}
+            </span>
+          </div>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" class="mb8">
+        <el-col :span="12">
+          <div class="info-item">
+            <label class="info-label">货主编码 (唯一标识，如 C00001)：</label>
+            <span class="info-value plaintext">
+              {{ info.ownerCode }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="info-item">
             <label class="info-label">货主名称 (公司全称)：</label>
             <span class="info-value plaintext">
               {{ info.ownerName }}
             </span>
           </div>
         </el-col>
+      </el-row>
+      <el-row :gutter="20" class="mb8">
         <el-col :span="12">
           <div class="info-item">
             <label class="info-label">国家：</label>
@@ -19,13 +47,21 @@
             </span>
           </div>
         </el-col>
-      </el-row>
-      <el-row :gutter="20" class="mb8">
         <el-col :span="12">
           <div class="info-item">
             <label class="info-label">城市：</label>
             <span class="info-value plaintext">
               {{ info.city }}
+            </span>
+          </div>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" class="mb8">
+        <el-col :span="12">
+          <div class="info-item">
+            <label class="info-label">详细地址：</label>
+            <span class="info-value plaintext">
+              {{ info.address }}
             </span>
           </div>
         </el-col>
@@ -77,6 +113,24 @@
       <el-row :gutter="20" class="mb8">
         <el-col :span="12">
           <div class="info-item">
+            <label class="info-label">联系人电话：</label>
+            <span class="info-value plaintext">
+              {{ info.contactPhone }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="info-item">
+            <label class="info-label">许可证号码：</label>
+            <span class="info-value plaintext">
+              {{ info.licenseNumber }}
+            </span>
+          </div>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" class="mb8">
+        <el-col :span="12">
+          <div class="info-item">
             <label class="info-label">许可证有效期：</label>
             <span class="info-value plaintext">
               {{ parseTime(info.licenseValidDate, '{y}-{m}-{d}') }}
@@ -85,9 +139,45 @@
         </el-col>
         <el-col :span="12">
           <div class="info-item">
+            <label class="info-label">许可证附件路径：</label>
+            <span class="info-value plaintext">
+              {{ info.licenseAttachment }}
+            </span>
+          </div>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" class="mb8">
+        <el-col :span="12">
+          <div class="info-item">
+            <label class="info-label">统一社会信用代码：</label>
+            <span class="info-value plaintext">
+              {{ info.usci }}
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="info-item">
+            <label class="info-label">营业执照附件路径：</label>
+            <span class="info-value plaintext">
+              {{ info.businessLicenseAttachment }}
+            </span>
+          </div>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" class="mb8">
+        <el-col :span="12">
+          <div class="info-item">
             <label class="info-label">结算币种：</label>
             <span class="info-value plaintext">
               <dict-tag :options="wms_currency" :value="info.settlementCurrency" />
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="info-item">
+            <label class="info-label">备注：</label>
+            <span class="info-value plaintext">
+              {{ info.remarks }}
             </span>
           </div>
         </el-col>
@@ -106,9 +196,9 @@
   </el-drawer>
 </template>
 
-<script setup lang="ts" name="OwnersViewDrawer">
-import type { WmsCargoOwners } from "@/types/api/wms/owners"
-import { getOwners } from '@/api/wms/owners'
+<script setup lang="ts" name="ConsgnorViewDrawer">
+import type { WmsCargoOwners } from "@/types/api/master/consgnor"
+import { getConsgnor } from '@/api/master/consgnor'
 
 const { wms_currency, wms_enable_status } = useDict('wms_currency', 'wms_enable_status')
 
@@ -120,7 +210,7 @@ const open = async (id: string): Promise<void> => {
   visible.value = true
   loading.value = true
   try {
-    const res = await getOwners(id)
+    const res = await getConsgnor(id)
     Object.assign(info, res.data ?? {})
   } catch (error) {
     console.error('获取货主信息失败:', error)
